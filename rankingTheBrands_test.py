@@ -1,12 +1,12 @@
 from bs4 import BeautifulSoup as soup
 import csv
-from urllib.request import urlopen as uReq
+import urllib.request as uReq
 import pandas as pd
 import os
 import all_functions as fnc
 
 user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
-headers={'User-Agent':user_agent}
+headers={'User-Agent': user_agent}
 
 
 url_list = ['https://www.rankingthebrands.com/The-Brand-Rankings.aspx?rankingID=83&year=1200',
@@ -28,7 +28,9 @@ for i in url_list:
         brandNames = []
         brandValues = []
 
-        uClient = uReq(value)  # downloading the website
+        website = uReq.Request(value, headers=headers)
+
+        uClient = uReq.urlopen(website)  # downloading the website
         page_html = uClient.read()
         uClient.close()
 

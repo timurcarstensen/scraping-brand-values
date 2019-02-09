@@ -8,12 +8,19 @@ def isfloat(value):
 
 def get_url_list(url: str) -> dict:
     from bs4 import BeautifulSoup
-    from urllib.request import urlopen as uReq
+    import urllib.request as uReq
+
+    user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+    headers = {'User-Agent': user_agent}
+
+
     u_dict = {}
     link_length = len(url)
     sliced_link = url[:(link_length - 4)]
 
-    uClient = uReq(url)
+    website = uReq.Request(url, headers=headers)
+
+    uClient = uReq.urlopen(website)
     page_html = uClient.read()
     uClient.close()
 
