@@ -1,3 +1,7 @@
+user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
+headers = {'User-Agent': user_agent}
+
+
 def isfloat(value):
     try:
         float(value)
@@ -9,10 +13,6 @@ def isfloat(value):
 def get_url_list(url: str) -> dict:
     from bs4 import BeautifulSoup
     import urllib.request as uReq
-
-    user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
-    headers = {'User-Agent': user_agent}
-
 
     u_dict = {}
     link_length = len(url)
@@ -35,7 +35,12 @@ def get_url_list(url: str) -> dict:
     return u_dict
 
 
+def download_website(link: str, hdr: dict) -> str:
+    import urllib.request as uReq
 
-
-
+    website = uReq.Request(link, headers=hdr)
+    uClient = uReq.urlopen(website)  # downloading the website
+    page_html = uClient.read()
+    uClient.close()
+    return page_html
 

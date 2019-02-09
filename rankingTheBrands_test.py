@@ -6,8 +6,7 @@ import os
 import all_functions as fnc
 
 user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
-headers={'User-Agent': user_agent}
-
+headers = {'User-Agent': user_agent}
 
 url_list = ['https://www.rankingthebrands.com/The-Brand-Rankings.aspx?rankingID=83&year=1200',
             'https://www.rankingthebrands.com/The-Brand-Rankings.aspx?rankingID=6&year=1214',
@@ -21,23 +20,22 @@ for i in url_list:
     csvFileNames = []
     currentTitle = ''
 
-    print(url_dictionary)
+    # print(url_dictionary)
 
     for key, value in url_dictionary.items():
 
         brandNames = []
         brandValues = []
 
-        website = uReq.Request(value, headers=headers)
+        # website = uReq.Request(value, headers=headers)
+        # uClient = uReq.urlopen(website)  # downloading the website
+        # page_html = uClient.read()
+        # uClient.close()
 
-        uClient = uReq.urlopen(website)  # downloading the website
-        page_html = uClient.read()
-        uClient.close()
-
-        page_soup = soup(page_html, 'lxml')
+        page_soup = soup(fnc.download_website(value, headers), 'lxml')
 
         if currentTitle == '':
-            currentTitle = page_soup.title.text.strip() # [0:32] + page_soup.title.text.strip()[39:48]
+            currentTitle = page_soup.title.text.strip()  # [0:32] + page_soup.title.text.strip()[39:48]
 
         fileName = key + '.csv'
         csvFileNames.append(fileName)
