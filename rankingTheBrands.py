@@ -1,9 +1,8 @@
 from bs4 import BeautifulSoup as soup
 import csv
-import urllib.request as uReq
 import pandas as pd
 import os
-import all_functions as fnc
+import functions as fnc
 
 user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
 headers = {'User-Agent': user_agent}
