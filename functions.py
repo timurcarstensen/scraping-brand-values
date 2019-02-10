@@ -47,3 +47,4 @@ def download_website(link: str, hdr: dict) -> str:
     return page_html
 
 
+def get_urls(link: str) -> list:
