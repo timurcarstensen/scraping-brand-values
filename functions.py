@@ -43,4 +43,3 @@ def download_website(link: str, hdr: dict) -> str:
     page_html = uClient.read()
     uClient.close()
     return page_html
-
