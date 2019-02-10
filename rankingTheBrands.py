@@ -1,3 +1,5 @@
+# this is the develop branch
+
 from bs4 import BeautifulSoup as soup
 import csv
 import pandas as pd
@@ -19,17 +21,10 @@ for i in url_list:
     csvFileNames = []
     currentTitle = ''
 
-    # print(url_dictionary)
-
     for key, value in url_dictionary.items():
 
         brandNames = []
         brandValues = []
-
-        # website = uReq.Request(value, headers=headers)
-        # uClient = uReq.urlopen(website)  # downloading the website
-        # page_html = uClient.read()
-        # uClient.close()
 
         page_soup = soup(fnc.download_website(value, headers), 'lxml')
 
