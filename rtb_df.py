@@ -50,11 +50,9 @@ def returnDataFrameRTB(url: str):
         sources.append(source)
         years.append(year)
 
-    brand_tuples = list(zip(names, values, sources, years
+    tuples = list(zip(names, values, sources, years))
 
-                            ))
-
-    df = pd.DataFrame(brand_tuples, columns=['NAME', 'VALUE', 'SOURCE', 'YEAR'])
+    df = pd.DataFrame(tuples, columns=['NAME', 'VALUE', 'SOURCE', 'YEAR'])
 
     print(df)
 
