@@ -10,23 +10,27 @@ headers = {'User-Agent': user_agent}
 testUrl = 'https://brandirectory.com/league_tables/table/global-500-2018'
 
 
-def returnUrlDictBrandDirectory(url: str) -> dict:
+def returnUrlDictBrandDirectory(url: str) -> dict: # takes in a initial url and retuns a dictionary (Year : Corresponding link)
     u_dict = dict()
     link = url[:(len(url) - 4)]
 
     for i in range(2007, 2019):
-        x = url[:(len(url) - 4)] + str(i)
-        u_dict[i] = x
+        if i == 2007: # adding exception for the year 2007 as the link format is slightly different
+            z = 'https://brandirectory.com/league_tables/table/global-250-2007'
+            u_dict[i] = z
+        else:
+            x = url[:(len(url) - 4)] + str(i)
+            u_dict[i] = x
 
     return u_dict
 
 
-def returnDataFrameBrandDirectory(url: str, hdr: dict):
+def returnDataFrameBrandDirectory(url: str, hdr: dict):  # takes a link (string) and a header (dictionary) and returns a dataframe
 
     p = soup(fnc.downloadWebsite(url, hdr), 'lxml')
 
-    y = int(p.find('div', class_='event_title').h2.text[-4:])
-    s = p.find('div', class_='report').strong.text[:13].replace(' ', '')
+    y = int(url[-4:])
+    s = 'BrandFinance'
 
     names = list()
     values = list()
@@ -50,7 +54,11 @@ def returnDataFrameBrandDirectory(url: str, hdr: dict):
 
     df = pd.DataFrame(tuples, columns=['NAME', 'VALUE', 'SOURCE', 'YEAR'])
 
-    print(df)
+    return df
 
 
-returnDataFrameBrandDirectory(testUrl, headers)
+# TESTING
+
+for x, y in returnUrlDictBrandDirectory(testUrl).items():
+
+    returnDataFrameBrandDirectory(y, headers)
