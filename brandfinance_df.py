@@ -10,12 +10,12 @@ headers = {'User-Agent': user_agent}
 testUrl = 'https://brandirectory.com/league_tables/table/global-500-2018'
 
 
-def returnUrlDictBrandDirectory(url: str) -> dict: # takes in a initial url and retuns a dictionary (Year : Corresponding link)
+def returnUrlDictBrandDirectory(url: str) -> dict:  # takes in a initial url and retuns a dictionary (Year : Corresponding link)
     u_dict = dict()
     link = url[:(len(url) - 4)]
 
     for i in range(2007, 2019):
-        if i == 2007: # adding exception for the year 2007 as the link format is slightly different
+        if i == 2007:  # adding exception for the year 2007 as the link format is slightly different
             z = 'https://brandirectory.com/league_tables/table/global-250-2007'
             u_dict[i] = z
         else:
@@ -23,6 +23,24 @@ def returnUrlDictBrandDirectory(url: str) -> dict: # takes in a initial url and 
             u_dict[i] = x
 
     return u_dict
+
+
+def returnDataFrameBrandDirectory(url: str, hdr: dict):  # takes a link (string) and a header (dictionary) and returns a dataframe
+
+    p = soup(fnc.downloadWebsite(url, hdr), 'lxml')
+
+    y = int(url[-4:])
+    s = 'BrandFinance'
+
+    names = list()
+    values = list()
+    sources = list()
+    years = list()
+
+    for x in p.findAll('td', class_='leftalign table_name'):
+        for i in x.find('a'):
+            if len(names) <= 99:
+                names.append(i)
 
 
 def returnDataFrameBrandDirectory(url: str, hdr: dict):  # takes a link (string) and a header (dictionary) and returns a dataframe
@@ -54,11 +72,21 @@ def returnDataFrameBrandDirectory(url: str, hdr: dict):  # takes a link (string)
 
     df = pd.DataFrame(tuples, columns=['NAME', 'VALUE', 'SOURCE', 'YEAR'])
 
+    # df.to_csv(f'{y}.csv', index=False, header=False)
+
+    # print(df)
+
     return df
 
 
-# TESTING
+def concatDataFramesWriteCSV(url: str, headers: dict, outputName: str):
+    l = list()
 
-for x, y in returnUrlDictBrandDirectory(testUrl).items():
+    for x, y in returnUrlDictBrandDirectory(url).items():
+        l.append(returnDataFrameBrandDirectory(y, headers))
 
-    returnDataFrameBrandDirectory(y, headers)
+    f = pd.concat(l)
+    f.to_csv(outputName, index=False, header=False)
+
+
+concatDataFramesWriteCSV(testUrl, headers, 'output.csv')

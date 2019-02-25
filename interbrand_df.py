@@ -1,6 +1,9 @@
 # DEVELOP
 
 import functions as fnc
+from bs4 import BeautifulSoup
+import pandas as pd
+
 user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
 headers = {'User-Agent': user_agent}
 
@@ -17,8 +20,7 @@ def getUrlDictInterbrand(url: str) -> dict:
 
 
 def returnDataFrameInterbrand(url: str, hdr: dict, currentYear: int):  # scrapes data off website and returns dataframe with the values
-    from bs4 import BeautifulSoup
-
+    
     p = soup(fnc.downloadWebsite(url, hdr), 'lxml')  # using the downloadWebsite function to download the website
 
     names = []
@@ -54,3 +56,5 @@ dictionary = getUrlDictInterbrand('https://www.interbrand.com/best-brands/best-g
 
 for x, y in dictionary.items():
     returnDataFrameInterbrand(y, headers, x)
+    
+

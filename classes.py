@@ -1,21 +1,26 @@
 # develop
 
 
-class Brand:
+# class Brand:
 
-    v = dict()
+#     v = dict()
+#     years = []
 
-    def __init__(self, name, value, source):
+#    @classmethod
+#     def checkForYear(y: int) -> bool:
+
+#     def addYear(y: int):
+#         do nothing
+
+#     def __init__(self, name, value, source):
+#         self.name = name
+
+#     def add_year_value(self, year, value, src):
+#         self.v[year] = [value, src]
+
+
+class testClass:
+
+    def __init__(self, name: str):
         self.name = name
-
-    def add_year_value(self, year, value, src):
-        self.v[year] = [value, src]
-
-
-apple_brand = Brand('Apple', '300000000', 'Brandfinance.com')
-
-apple_brand.add_year_value(1998, 3000, "Brandfinance")
-apple_brand.add_year_value(1997, 3330, "Interbrand")
-
-
-print(apple_brand.v)
+        self.years = list()
