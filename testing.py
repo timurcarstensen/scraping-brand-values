@@ -1,4 +1,4 @@
-# this is the develop branch
+# DEVELOP
 
 from bs4 import BeautifulSoup as soup
 # import csv
@@ -54,117 +54,33 @@ def returnDataFrameRTB(url: str):
 
                             ))
 
-    df = pd.DataFrame(brand_tuples, columns=['name', 'value', 'source', 'year'])
+    df = pd.DataFrame(brand_tuples, columns=['NAME', 'VALUE', 'SOURCE', 'YEAR'])
 
-    # print(df)
+    print(df)
 
     return df
 
 
-dict = fnc.getUrlListRTB('https://www.rankingthebrands.com/The-Brand-Rankings.aspx?rankingID=6&year=1214')
+def getUrlListRTB(url: str) -> dict:  # gets all the URLs for each year from each ranking --> returns a dictionary (year: "url")
+    from bs4 import BeautifulSoup
+    import urllib.request as uReq
 
-dictOfDataFrames = {}
+    u_dict = {}
+    link_length = len(url)
+    sliced_link = url[:(link_length - 4)]
 
-for x, y in dict.items():
-    dictOfDataFrames[x] = returnDataFrameRTB(y)
+    website = uReq.Request(url, headers=headers)
 
-print(dictOfDataFrames)
+    uClient = uReq.urlopen(website)
+    page_html = uClient.read()
+    uClient.close()
 
+    soup = BeautifulSoup(page_html, 'lxml')
 
-# p = soup(fnc.downloadWebsite(url_list[0], headers), 'lxml')
+    option = soup.findAll('option')
 
-# t = p.find('span', id='ctl00_mainContent_LBRankName')
-# l = t.text
+    for i in option:
+        formattedLink = sliced_link + i['value']
+        u_dict[i.text] = formattedLink
 
-# title = l.split(' ')
-
-# print(title[0])
-
-
-# def dwnld_rtb_ranking_rtn_df(url: str) -> [DataFrame]:
-#     frames = []
-#     url_dictionary = fnc.get_url_list(url)
-
-#     for x, y in url_dictionary.items():
-#         page = soup(fnc.download_website(y, headers), 'lxml')
-
-# for i in url_list:
-
-#     url_dictionary = fnc.get_url_list(i)
-
-#     csvFileNames = []
-#     currentTitle = ''
-
-#     for key, value in url_dictionary.items():
-
-#         brandNames = []
-#         brandValues = []
-
-#         page_soup = soup(fnc.download_website(value, headers), 'lxml')
-
-#         if currentTitle == '':
-#             currentTitle = page_soup.title.text.strip()  # [0:32] + page_soup.title.text.strip()[39:48]
-
-#         fileName = key + '.csv'
-#         csvFileNames.append(fileName)
-
-#         csv_file = open(fileName, 'w')
-#         csv_writer = csv.writer(csv_file)
-#         csv_writer.writerow(['Brandname', 'Valuation'])
-
-#         for brand_item in page_soup.findAll('div', class_='name'):
-#             for name in brand_item.findAll('a'):
-#                 i = name.text.strip()
-#                 brandNames.append(i)
-
-#         for valuation in page_soup.findAll('div', class_='weighted'):
-#             i = valuation.text.strip()
-#             i_converted = i.replace(',', '.')
-
-#             if i_converted.isdigit() or fnc.isfloat(i_converted):
-#                 brandValues.append(i)
-
-#         dictionary = dict(zip(brandNames, brandValues))
-
-#         for keys, values in dictionary.items():
-#             csv_writer.writerow([keys, values])
-
-#     csv_file.close()
-
-#     print('done with: ' + key)
-
-# writer = pd.ExcelWriter(currentTitle + '.xlsx', engine='xlsxwriter')
-
-# for files in csvFileNames:
-#     dataFrame = pd.read_csv(files)
-#     dataFrame.to_excel(writer, sheet_name=files[0:4])
-#     os.remove(files)
-
-# writer.save()
-
-# print(currentTitle + '.xlsx')
-# print('Finished')
-
-
-# def list_of_tuples(soup) -> [()]:
-#     tuples = []
-#     tpl = tuple()
-#     name = ""
-#     value = 0
-
-#     for items in soup.findAll('div', class_='name'):
-
-#     for brand_item in soup.findAll('div', class_='name'):
-#         for name in brand_item.findAll('a'):
-#             i = name.text.strip()
-#             name = i
-
-#     for valuation in soup.findAll('div', class_='weighted'):
-#         i = valuation.text.strip()
-#         i.replace(',', '.')
-
-#         if i.isdigit() or fnc.isfloat(i):
-#             value = i
-#     tpl = (name, value)
-
-#     return tuples
+    return u_dict
