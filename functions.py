@@ -14,6 +14,7 @@ def isFloat(value):
 
 def downloadWebsite(link: str, hdr: dict) -> str:
     import urllib.request as uReq
+    from bs4 import BeautifulSoup
 
     website = uReq.Request(link, headers=hdr)
     uClient = uReq.urlopen(website)  # downloading the website
