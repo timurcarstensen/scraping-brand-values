@@ -2,6 +2,7 @@ import pandas as pd
 import interbrand_df as inter
 import brandfinance_df as brand
 import rtb_df as rtb
+import functions as fnc
 
 dfList = list()
 
@@ -30,9 +31,12 @@ for i in rtb_url_list:
 
 f = pd.concat(dfList)
 
-writer = pd.ExcelWriter('final.xlsx')
 
-f.to_excel(writer, 'Sheet1', index=False)
-writer.save()
+fnc.toExcel('final', f) #replaces lines below
+
+# writer = pd.ExcelWriter('final.xlsx')
+
+# f.to_excel(writer, 'Sheet1', index=False)
+# writer.save()
 
 f.to_csv('final.csv', index=False, header=False)

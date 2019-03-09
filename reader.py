@@ -1,5 +1,5 @@
 import pandas as pd  # importing pandas
-import functions as fnc # importing functions file
+import functions as fnc  # importing functions file
 
 readIn = pd.read_excel('sorted.xlsx')  # reading in the sorted.xlsx file and creating a new DataFrame
 readIn = readIn.loc[:, ~readIn.columns.str.contains('^Unnamed')]
@@ -33,10 +33,17 @@ for i in readIn.SOURCE:  # finding all unique sources
 
 new_df = pd.DataFrame({'NAME': nameList, 'YEAR': yearList})  # creating a new DataFrame based upon brand names and all unique years
 
-new_df['Country'] = "NaN"  # adding a column for country
-new_df['Industry Sector'] = "NaN"  # adding a column for industry sector
+new_df['Country'] = 'NaN'  # adding a column for country
+new_df['Industry Sector'] = 'NaN'  # adding a column for industry sector
 
 for i in sources:  # adding new columns for each source available
     new_df[i] = 'NaN'
+
+columnList = list(new_df)
+
+currentBrand = str()
+currentYear = int()
+currentSource = str()
+
 
 # fnc.toExcel('testing', new_df)
