@@ -9,11 +9,11 @@ yearList = []
 nameList = []
 sources = []
 
-for i in readIn.NAME:
+for i in readIn.NAME: #finding all unique names in the read in DataFrame
     if i not in names:
         names.append(i)
 
-for name in names:
+for name in names: #Extracting all years available for each brand in the ranking
     nL = []
     yL = []
     x = readIn[readIn.NAME == name].sort_values(by=['YEAR'])
@@ -27,16 +27,16 @@ for name in names:
     for i in nL:
         nameList.append(i)
 
-for i in readIn.SOURCE:
+for i in readIn.SOURCE: #finding all unique sources
     if i not in sources:
         sources.append(i)
 
-new_df = pd.DataFrame({'NAME': nameList, 'YEAR': yearList})
+new_df = pd.DataFrame({'NAME': nameList, 'YEAR': yearList}) #creating a new DataFrame based upon brand names and all unique years
 
-new_df['Country'] = "NaN"
-new_df['Industry Sector'] = "NaN"
+new_df['Country'] = "NaN" # adding a column for country
+new_df['Industry Sector'] = "NaN" # adding a column for industry sector
 
-for i in sources:
+for i in sources: #adding new columns for each source available
     new_df[i] = 'NaN'
 
 # fnc.toExcel('testing', new_df)
