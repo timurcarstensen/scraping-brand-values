@@ -1,26 +1,45 @@
-import pandas as pd
-df = pd.read_excel('sorted.xlsx')
-df = df.loc[:, ~df.columns.str.contains('^Unnamed')]
+import pandas as pd # importing pandas
+import functions as fnc # importing functions file
 
-names = list()
+readIn = pd.read_excel('sorted.xlsx') # reading in the sorted.xlsx file and creating a new DataFrame
+readIn = readIn.loc[:, ~readIn.columns.str.contains('^Unnamed')]
 
-brandDict = {'': []}
+names = []
+yearList = []
+nameList = []
+sources = []
 
-for i in df.NAME:
+for i in readIn.NAME:
     if i not in names:
         names.append(i)
 
-for i in names:
-    l = []
-    x = df[df.NAME == i].sort_values(by=['YEAR'])
+for name in names:
+    nL = []
+    yL = []
+    x = readIn[readIn.NAME == name].sort_values(by=['YEAR'])
     for z in x.YEAR:
-        if z not in l:
-            l.append(z)
-    brandDict[i] = l
+        if z not in yL:
+            yL.append(z)
+    for y in range(len(yL)):
+        nL.append(name)
+    for i in yL:
+        yearList.append(i)
+    for i in nL:
+        nameList.append(i)
 
-# new = pd.DataFrame.from_dict(brandDict, orient='index')
+for i in readIn.SOURCE:
+    if i not in sources:
+        sources.append(i)
 
-my_list = pd.Series(brandDict['Amazon'])
+new_df = pd.DataFrame({'NAME': nameList, 'YEAR': yearList})
 
-new_df = pd.DataFrame(my_list)
-print(new_df)
+new_df['Country'] = "NaN"
+new_df['Industry Sector'] = "NaN"
+
+for i in sources:
+    new_df[i] = 'NaN'
+
+# fnc.toExcel('testing', new_df)
+
+
+

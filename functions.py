@@ -21,3 +21,10 @@ def downloadWebsite(link: str, hdr: dict) -> str:
     page_html = uClient.read()
     uClient.close()
     return page_html
+
+
+def toExcel(name: str, df):
+    import pandas as pd
+    w = pd.ExcelWriter(name + '.xlsx')
+    df.to_excel(w, 'Sheet1', index=False)
+    w.save()
