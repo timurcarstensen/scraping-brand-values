@@ -1,4 +1,5 @@
 {
     "python.pythonPath": "/Users/timurcarstensen/anaconda3/bin/python",
-    "editor.fontSize": 14
+    "editor.fontSize": 14,
+    "python.linting.enabled": true
 }

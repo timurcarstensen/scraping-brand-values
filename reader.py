@@ -5,13 +5,10 @@ readIn = pd.read_excel('sorted.xlsx')  # reading in the sorted.xlsx file and cre
 readIn = readIn.loc[:, ~readIn.columns.str.contains('^Unnamed')]
 
 
-try:
-    print(readIn.loc[(readIn.NAME == 'Amazon') & (readIn.YEAR == 2010) & (readIn.SOURCE == 'Interbrand')])
-except AttributeError:
-    print('wrong attribute')
-except Exception as e:
-    print(type(e))
-
+def getValueFromReadIn(brandName: str, year: int, source: str, input: pd.DataFrame) -> str:
+    import pandas as pd
+    v = str(input.loc[(input.NAME == brandName) & (input.YEAR == year) & (input.SOURCE == source)].iloc[0]['VALUE'])
+    return v
 
 names = []
 yearList = []
@@ -40,27 +37,30 @@ for i in readIn.SOURCE:  # finding all unique sources
     if i not in sources:
         sources.append(i)
 
-df = pd.DataFrame({'NAME': nameList, 'YEAR': yearList})  # creating a new DataFrame based upon brand names and all unique years
+readOut = pd.DataFrame({'NAME': nameList, 'YEAR': yearList})  # creating a new DataFrame based upon brand names and all unique years
 
-df['Country'] = 'NaN'  # adding a column for country
-df['Industry Sector'] = 'NaN'  # adding a column for industry sector
+readOut['Country'] = 'NaN'  # adding a column for country
+readOut['Industry Sector'] = 'NaN'  # adding a column for industry sector
 
 for i in sources:  # adding new columns for each source available
-    df[i] = 'NaN'
+    readOut[i] = 'NaN'
 
-columnList = list(df)
+columnList = list(readOut)
 
-# currentBrand = str()
-# currentYear = int()
-# currentSource = str()
-
-# for i in names:
-#     y = df.loc[df.NAME == i]
-#     cY = int()
-#     for i in y.YEAR:
-#         print(i)
+d = list()
 
 
-# fnc.toExcel('testing', new_df)
+for index, row in readOut.iterrows():
+    for source in sources:
+        n = row['NAME']
+        y = row['YEAR']
+        for s in sources:
+                if row[s] == 'NaN':
+                        try:
+                            k = getValueFromReadIn(row['NAME'], row['YEAR'], s, readIn)
+                            if k not in d: 
+                                d.append(k)
+                        except:
+                                pass
 
 
