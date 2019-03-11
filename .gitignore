@@ -39,6 +39,6 @@ Thumbs.db
 tempCodeRunnerFile.py
 
 old/
-
 .vscode/
+__pycache__/
 
