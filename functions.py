@@ -105,7 +105,7 @@ def concatDataFramesWriteCsvBrandFinance(url: str, headers: dict, outputName: st
 def returnDataFrameRTB(url: str):
     from bs4 import BeautifulSoup as soup
 
-    p = soup(downloadWebsite(url, headers), 'lxml')
+    p = soup(downloadWebsite(url, headers), 'lxml', from_encoding='utf-8') # from_encoding='utf-8' to properly parse all the brand names
 
     names = []
     values = []
@@ -137,12 +137,12 @@ def returnDataFrameRTB(url: str):
 
     df = pd.DataFrame(tuples, columns=['NAME', 'VALUE', 'SOURCE', 'YEAR'])
 
-    print(df)
+    print('done with ' + str(year) + '!')
 
     return df
 
 
-def getUrlListRTB(url: str, hdr: dict) -> dict:  # gets all the URLs for each year from each ranking --> returns a dictionary (year: "url")
+def getUrlListRTB(url: str, hdr: dict) -> dict:  # gets all the URLs for each year from each ranking -> returns a dictionary (year: "url")
     from bs4 import BeautifulSoup as soup
 
     d = {}
