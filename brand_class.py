@@ -10,16 +10,16 @@ class Brand(object):
     def __init__(self, name: str, frame: pd.DataFrame): 
         self.name = name
         self.frame = frame
-        self.sourceList = []
+        self.currentSources = [] # sources for each specific brand
+        self.allSources = [] # all sources available in self.frame
         self.d = {'': [()]}
         self.yearList = []
-        self.sourceList = []
         self.findYearSourceCombinations()
 
     def checkSources(self):
         pass
 
-    def getValue(self, source: str, year: int) -> str:
+    def getValue(self, source: str, year: int) -> str: #gets value for specific source and year of 
         f = self.frame
         n = self.name
         v = f.loc[(f.NAME == n) & (f.SOURCE == source) & (f.YEAR == year)].VALUE.item()
@@ -31,6 +31,7 @@ class Brand(object):
         return f.loc[f.NAME == n]
 
     def findYearsSources(self):
+        f = self.frame
         sL = []
         yL = []
         for x, y in self.returnBrandDataFrame().iterrows():
@@ -39,14 +40,17 @@ class Brand(object):
             if y.YEAR not in yL:
                 yL.append(y.YEAR)
         yL.sort()
+        for i in f.SOURCE:
+            if i not in self.allSources:
+                self.allSources.append(i)
         self.yearList = yL
-        self.sourceList = sL
+        self.currentSources = sL
 
     def findYearSourceCombinations(self):
         my_dict = self.d
         self.findYearsSources()
         f = self.returnBrandDataFrame()
-        s = self.sourceList
+        s = self.currentSources
         for i in s: 
             l = []
             x = f.loc[f.SOURCE == i].YEAR.sort_values(ascending=True)
@@ -56,11 +60,16 @@ class Brand(object):
         self.d = my_dict
                 
                 
-my_brand = Brand('Amazon', readIn)
+for i in readIn.NAME:
+    x = Brand(i, readIn)
+    print(x.name) 
+    for index, row in x.d.items():
+        print(index, row)
 
-for x, y in my_brand.d.items():
-    print(x,y)
 
 
 
+# my_brand = Brand('Apple', readIn)
 
+# for x, y in my_brand.d.items():
+#     print(x,y)

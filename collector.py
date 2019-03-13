@@ -1,7 +1,4 @@
 import pandas as pd
-import interbrand_df as inter
-import brandfinance_df as brand
-import rtb_df as rtb
 import functions as fnc
 
 dfList = list()
@@ -18,16 +15,16 @@ rtb_url_list = ['https://www.rankingthebrands.com/The-Brand-Rankings.aspx?rankin
                 'https://www.rankingthebrands.com/The-Brand-Rankings.aspx?rankingID=221&year=1238']
 
 
-for x, y in inter.getUrlDictInterbrand(interbrand_url).items():
-    dfList.append(inter.returnDataFrameInterbrand(y, headers, x))
+for x, y in fnc.getUrlDictInterbrand(interbrand_url).items():
+    dfList.append(fnc.returnDataFrameInterbrand(y, headers, x))
 
-for x, y in brand.returnUrlDictBrandDirectory(brandfinance_url).items():
-    dfList.append(brand.returnDataFrameBrandDirectory(y, headers))
+for x, y in fnc.returnUrlDictBrandDirectory(brandfinance_url).items():
+    dfList.append(fnc.returnDataFrameBrandDirectory(y, headers))
 
 
 for i in rtb_url_list:
-    for x, y in rtb.getUrlListRTB(i, headers).items():
-        dfList.append(rtb.returnDataFrameRTB(y))
+    for x, y in fnc.getUrlListRTB(i, headers).items():
+        dfList.append(fnc.returnDataFrameRTB(y))
 
 f = pd.concat(dfList)
 
