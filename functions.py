@@ -8,14 +8,9 @@ import pandas as pd
 user_agent = 'Mozilla/5.0 (Windows; U; Windows NT 5.1; en-US; rv:1.9.0.7) Gecko/2009021910 Firefox/3.0.7'
 headers = {'User-Agent': user_agent}
 
-brandfinance_url = 'https://brandirectory.com/league_tables/table/global-500-2018'
+'''-----------------GLOBAL FUNCTIONS----------------------'''
 
-rtbUrlList = ['https://www.rankingthebrands.com/The-Brand-Rankings.aspx?rankingID=6&year=1214',
-                'https://www.rankingthebrands.com/The-Brand-Rankings.aspx?rankingID=334&year=1217',
-                'https://www.rankingthebrands.com/The-Brand-Rankings.aspx?rankingID=221&year=1238']
-
-
-def isFloat(value):
+def isFloat(value): #checks if a number (or string) is a floating point
     try:
         float(value)
         return True
@@ -44,9 +39,9 @@ def toExcel(name: str, df):
 
 def returnUrlDictBrandDirectory(url: str) -> dict:  # takes in a initial url and retuns a dictionary (Year : Corresponding link)
     u_dict = dict()
-    link = url[:(len(url) - 4)]
+    # link = url[:(len(url) - 4)]
 
-    for i in range(2007, 2019):
+    for i in range(2007, 2020):
         if i == 2007:  # adding exception for the year 2007 as the link format is slightly different
             z = 'https://brandirectory.com/league_tables/table/global-250-2007'
             u_dict[i] = z
@@ -69,14 +64,18 @@ def returnDataFrameBrandDirectory(url: str, hdr: dict):  # takes a link (string)
     sources = list()
     years = list()
 
-    for x in p.findAll('td', class_='leftalign table_name'):
-        for i in x.find('a'):
-            if len(names) <= 99:
-                names.append(i)
+    for x in p.findAll('span'):
+        print(x)
+        # for i in x.find('a', class_='tight-text'):
+        #     print(i)
+        #     print(i)
+        #     if len(names) <= 99: #for i in x.value:     find('a'):
+        #         names.append(i)
 
-    for v in p.findAll('td', class_='c v1'):
-        for i in v.findAll('span', class_='o'):
-            values.append(i.text.replace(',', ''))
+    for v in p.findAll('td', attrs={"data-label": y}):
+        print(v)
+        # for i in v.findAll('span', class_='o'):
+        #     values.append(i.text.replace(',', ''))
 
     for i in names:
         sources.append(s)
@@ -94,7 +93,7 @@ def returnDataFrameBrandDirectory(url: str, hdr: dict):  # takes a link (string)
 def concatDataFramesWriteCsvBrandFinance(url: str, headers: dict, outputName: str):
     l = list()
 
-    for x, y in returnUrlDictBrandDirectory(url).items():
+    for y in returnUrlDictBrandDirectory(url).values():
         l.append(returnDataFrameBrandDirectory(y, headers))
 
     f = pd.concat(l)
@@ -123,15 +122,39 @@ def returnDataFrameRTB(url: str):
             names.append(i)
 
     for valuation in p.findAll('div', class_='weighted'):
-        i = valuation.text.strip()
-        i_converted = i.replace(',', '.')
+        if source.text == 'Millward Brown':
+            i = valuation.text.strip()
+            i = i.replace(',', '')
+            i = i.replace('.', '')
+            if i.isdigit() or isFloat(i):
+                values.append(int(i))
+        
+        elif "Forbes" in source.text:
+            i = valuation.text.strip()
+            if '.' in i:
+                i = i.replace('.', '')
+                i = i + '00'
+            else:
+                i = i + '000'
+            if i.isdigit() or isFloat(i):
+                values.append(int(i))
 
-        if i_converted.isdigit() or isFloat(i_converted):
-            values.append(i)
+        elif source.text == 'European Brand Institute - Vienna':
+            i = valuation.text.strip()
+            i_c = i.replace('.', '')
+            if i_c.isdigit() or isFloat(i_c):
+                values.append(int(i_c))
+
+        elif 'Brand Finance' in source.text:
+            i = valuation.text.strip()
+            i = i.replace('.', '')
+            i = i.replace(',', '')
+            if i.isdigit() or isFloat(i):
+                values.append(int(i))
 
     for i in names:
         sources.append(source.text)
-        years.append(year)
+        years.append(int(year))
 
     tuples = list(zip(names, values, sources, years))
 
@@ -162,11 +185,11 @@ def getUrlListRTB(url: str, hdr: dict) -> dict:  # gets all the URLs for each ye
 def concatDataFramesRTB(url: list, hdr: dict, outputName: str):
 
     l = list()
-    links = list()
+    # links = list()
 
     for i in url:
         z = getUrlListRTB(i, hdr)
-        for a, b in z.items():
+        for b in z.values():
             l.append(returnDataFrameRTB(b))
 
     f = pd.concat(l)
@@ -202,7 +225,10 @@ def returnDataFrameInterbrand(url: str, hdr: dict, currentYear: int):
             names.append(n.strip())
 
         for z in b.find('div', class_='brand-info brand-value brand-col-7'):
-            values.append(z.strip())
+            z = z.replace('$m', '')
+            z = z.replace(',', '')
+            z = z.strip()
+            values.append(int(z))
 
     for i in names:  # adding as many sources (in this case just Interbrand as this is the interbrand function) and the currentYear into a list
         sources.append(source)
