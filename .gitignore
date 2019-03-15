@@ -47,5 +47,6 @@ rtb_df.py
 untracked/
 !raw.xlsx
 test_scraper.py
+comments.txt
 
 
