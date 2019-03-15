@@ -1,3 +1,4 @@
+# DEVELOPMENT BRANCH
 import pandas as pd
 
 readIn = pd.read_excel('sorted.xlsx')  # reading in the sorted.xlsx file and creating a new DataFrame
@@ -15,6 +16,8 @@ class Brand(object):
         self.d = {'': [()]}
         self.yearList = []
         self.findYearSourceCombinations()
+        self.country = str() # to be added later
+        self.sector = str() # to be added later
 
     def checkSources(self):
         pass
