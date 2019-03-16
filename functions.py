@@ -29,11 +29,25 @@ def downloadWebsite(link: str, hdr: dict) -> str:
     return page_html
 
 
-def toExcel(name: str, df):
+def toExcel(name: str, df): #saves dataframe to .xlsx file
     import pandas as pd
     w = pd.ExcelWriter(name + '.xlsx')
     df.to_excel(w, 'Sheet1', index=False)
     w.save()
+
+def getSources(frame: pd.DataFrame) -> list: # returns all unique sources in a given dataframe as a list
+    my_list = list()
+    for i in frame.SOURCE:
+        if i not in my_list:
+            my_list.append(i)
+    return my_list
+
+def getNames(frame: pd.DataFrame) -> list: # returns all unique brand names in any given dataframe as a list
+    l = list()
+    for i in frame.NAME:
+        if i not in l:
+            l.append(i)
+    return l
     
 '''----------------------------BRANDFINANCE FUNCTIONS-------------------------------''' 
 
