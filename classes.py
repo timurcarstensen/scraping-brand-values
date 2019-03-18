@@ -37,7 +37,6 @@ class Row(object):
 
 class Brand(object):
     import pandas as pd
-    from row_class import Row
 
     def __init__(self, name: str, frame: pd.DataFrame): 
         self.name = name
